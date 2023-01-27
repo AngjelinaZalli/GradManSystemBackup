@@ -1,0 +1,13 @@
+﻿@model GradManSystem1.Models.Proffesor
+@{
+    ViewData["Title"] = "AfishoTeDhena";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Afisho Te Dhenat e Profesorit me id @Model.Id</h2>
+<ul>
+    <li>@Model.Name</li>
+    <li>@Model.Surname</li>
+    <li>@Model.Email</li>
+    <li>@Model.Courses</li>
+</ul>

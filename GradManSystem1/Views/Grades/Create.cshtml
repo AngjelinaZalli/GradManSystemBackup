@@ -1,0 +1,59 @@
+﻿@model GradManSystem1.Models.Grade
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>Grade</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GradeMark" class="control-label"></label>
+                <input asp-for="GradeMark" class="form-control" />
+                <span asp-validation-for="GradeMark" class="text-danger"></span>
+            </div>
+
+
+
+             <div class="form-group">
+                <label asp-for="StudentId" class="control-lable"></label>
+                <select asp-for="StudentId" asp-items="ViewBag.Students" class="form-control">
+                    <option value="">Choose Students</option>  
+            </select>
+                <span asp-validation-for="StudentId" class="text-danger" />
+             </div>
+            <div class="form-group">
+                <label asp-for="CoursesId" class="control-lable"></label>
+                <select asp-for="CoursesId" asp-items="ViewBag.Courses" class="form-control">
+                    <option value="">Choose Courses</option>
+                </select>
+                <span asp-validation-for="CoursesId" class="text-danger" />
+            </div>
+              <div class="form-group">
+                <label asp-for="ProffesorId" class="control-lable"></label>
+                <select asp-for="ProffesorId" asp-items="ViewBag.Proffesors" class="form-control">
+                    <option value="">Choose Proffesors</option>  
+            </select>
+                <span asp-validation-for="ProffesorId" class="text-danger" />
+             </div>  
+
+
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
