@@ -12,21 +12,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddRoles<IdentityRole>()
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-
-
-
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI()
+    .AddRoles<IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
-
-
+AddAuthorizationPolicies();
 
 //builder.Services.AddAuthorization(options =>
 //{
@@ -34,11 +35,6 @@ builder.Services.AddControllersWithViews();
 //    .RequireAuthenticatedUser()
 //    .Build();
 //});
-
-
-
-
-
 
 var app = builder.Build();
 
@@ -70,3 +66,17 @@ app.MapRazorPages();
 
 app.Run();
 
+void AddAuthorizationPolicies()
+{
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("Student", x => x.RequireClaim("Student"));
+    });
+
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("Admin", x => x.RequireRole("Admin"));
+        options.AddPolicy("Editor", x => x.RequireRole("Editor"));
+        options.AddPolicy("Student", x => x.RequireRole("Student"));
+    });
+}

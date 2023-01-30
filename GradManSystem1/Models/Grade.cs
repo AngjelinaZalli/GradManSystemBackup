@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace GradManSystem1.Models
 {
     public class Grade : BaseClass
     {
-        internal string UserId;
-
         [Required]
         public int GradeMark { get; set; }
         [Required]
@@ -13,12 +13,8 @@ namespace GradManSystem1.Models
         public int CoursesId { get; set; }
         [Required]
         public int ProffesorId { get; set; }
-        //[Required]
-        //public Student Student { get; set; }
-        //[Required]
-        //public Courses Courses { get; set; }
-        //[Required]
-        //public Proffesor Proffesor { get; set; }
-
+        public virtual Student Student { get; set; }
+        public virtual Courses Courses { get; set; }
+        public virtual  Proffesor Proffesor { get; set; }
     }
 }

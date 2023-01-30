@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<html>
+<head>
+    <title></title>
+
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default yamm">
+            <div class="navbar-header">
+                <div class="logo-normal">
+
+                    @*<a class="navbar-brand" href="~/index.html"><img src="~/upload/fshn.png" alt=""/></a>*@
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a asp-action="Index" asp-controller="Home" class="nav-item nav-link active">Home </a></li>&nbsp;&nbsp;&nbsp;
+
+                    </ul>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <ul class="nav navbar-nav navbar-left">
+                            <li><a asp-action="Contact" asp-controller="Home" class="nav-item nav-link active"> Contact </a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-left">
+                            <li><a asp-action="Grades" asp-controller="Students" class="nav-item nav-link active"> Grades </a></li>
+                        </ul>
+                    }
+                </div>
+            </div>
+
+            <div id="navbar" class="navbar-collapse collapse">
+            </div>
+        </nav><!-- end navbar -->
+    </div>
+
+
+</body>
+
+</html>
+
+
+

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace GradManSystem1.Models
 {
     public class Student : BaseClass
@@ -11,7 +13,9 @@ namespace GradManSystem1.Models
         public DateTime Birthday { get; set; }
         [Required(ErrorMessage = "Email is Required.")]
         public string Email { get; set; }
-        
+      
+        public string? UserId { get; set; }
+
     }
 
 }

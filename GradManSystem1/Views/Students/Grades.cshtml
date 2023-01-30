@@ -1,0 +1,60 @@
+﻿@model IEnumerable<GradManSystem1.Models.Grade>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GradeMark)
+            </th>
+            <th>
+                @Html.DisplayName( "Proffesor Name")
+            </th>
+            <th>
+                @Html.DisplayName("Courses Name")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GradeMark)
+                </td>
+                <td>
+                    @{
+                        string name = string.Concat(item.Proffesor.Name, " ",item.Proffesor.Surname);
+                        @Html.DisplayFor(modelItem => name)
+                    }
+                </td>
+                <td>
+                    @{
+                        string cours = string.Concat(item.Courses.Name, " ",item.Courses.Year);
+                        @Html.DisplayFor(modelItem => cours)
+                    }
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                       <a asp-action="Edit" asp-controller="Grades" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Details" asp-controller="Grades" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Delete" asp-controller="Grades" asp-route-id="@item.Id">Delete</a>
+                    }                                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

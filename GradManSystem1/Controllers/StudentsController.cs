@@ -183,5 +183,19 @@ namespace GradManSystem1.Controllers
         {
             return _context.Student.Any(e => e.Id == id);
         }
+
+        [Authorize(Policy = "Student")]
+        public async Task<IActionResult> Grades(string id)
+        {
+            var student = await _context.Student.Where(x => x.UserId == id).FirstOrDefaultAsync();
+            var listGrades = await _context.Grade.Include(x=>x.Courses)
+                                                 .Include(x=>x.Proffesor)
+                                                 .Where(x => x.StudentId == student.Id)
+                                                 .ToListAsync();
+
+            return View(listGrades);
+        }
+
+
     }
 }

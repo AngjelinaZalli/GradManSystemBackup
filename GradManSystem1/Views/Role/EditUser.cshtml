@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Roles</h1>
+    @using (Html.BeginForm("Role", "SaveUser"))
+    {
+  <p>Please assign a role to the user :</p>
+    @foreach(var item in @Model)
+    {
+            var id = @item.IdentityRole.Id;
+            <input type="radio" name="role" style="color:black;" checked="@item.Selected" asp-for="@id" value="@item.IdentityRole.NormalizedName">
+            <label asp-for="@item">@item.IdentityRole.Name</label>
+            <br>
+    }
+     <hr class="my-4" >
+    <a asp-action="SaveUser" id="button" asp-controller="Role" asp-route-id="@ViewBag.Id" asp-route-foo="1">Save</a>
+    }
+</body>
+</html>
+
+@*
+<script>
+        $(document).on("click", "input[name=role]:radio", function () {
+            var radioValue = $("input[name='role']:checked").val();
+            $('input[name="name_of_your_radiobutton"]:checked').val();
+            $("button").attr("asp-route-foo", radioValue);
+        });
+</script>*@
+   <script type="text/javascript">
+    $( document ).ready(function() {
+        $('#button').click(function () {
+            console.log("aaaaaaaaaaaaaaaa");
+            var radioValue = $('[name="role"]:radio:checked').val();
+            console.log(radioValue);
+             var oldUrl = $(this).attr("href"); // Get current url
+            console.log(oldUrl);
+            var newUrl = oldUrl.replace("foo=1", "foo=" + radioValue); // Create new
+            console.log(newUrl);
+
+            $(this).attr("href", newUrl);
+      });
+    });
+</script>

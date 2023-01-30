@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Users</h1>
+
+    @if(@Model != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">EmailConfirmed</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.EmailConfirmed</td>
+                        <td>
+                            <a asp-controller="Role" asp-action="EditUser" asp-route-id="@user.Id">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+ </div>
+ 
