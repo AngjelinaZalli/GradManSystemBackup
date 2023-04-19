@@ -29,6 +29,19 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 builder.Services.AddControllersWithViews();
 AddAuthorizationPolicies();
 
+//var services = builder.Services;
+//var configuration = builder.Configuration;
+//services.AddAuthentication().AddGoogle(options =>
+//{
+//    options.ClientId = configuration["Authentication:Google:ClientId"];
+//    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+//});
+//services.AddAuthentication().AddFacebook(options =>
+//{
+//    options.ClientId = configuration["Authentication:Facebook:ClientId"];
+//    options.ClientSecret = configuration["Authentication:Facebook:ClientSecret"];
+//});
+
 //builder.Services.AddAuthorization(options =>
 //{
 //    options.FallbackPolicy = new AuthorizationPolicyBuilder()
