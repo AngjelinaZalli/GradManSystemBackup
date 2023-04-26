@@ -67,6 +67,9 @@
                         @if (!SignInManager.IsSignedIn(User))
                         {
                       <ul class="nav navbar-nav navbar-left">
+                          <li><a asp-action="Index" asp-controller="Home" class="nav-item nav-link active"> Home </a></li>
+                      </ul>
+                      <ul class="nav navbar-nav navbar-left">
                           <li><a asp-action="Contact" asp-controller="Home" class="nav-item nav-link active"> Contact </a></li>
                       </ul>
                       <ul class="nav navbar-nav navbar-left">
@@ -78,6 +81,9 @@
                   }
                   else
                   {
+                            <ul class="nav navbar-nav navbar-left">
+                                <li><a asp-action="Index" asp-controller="Home" class="nav-item nav-link active"> Home </a></li>
+                            </ul>
                       <ul class="nav navbar-nav navbar-left">
                           <li><a asp-action="Contact" asp-controller="Home" class="nav-item nav-link active"> Contact </a></li>
                       </ul>
@@ -100,9 +106,31 @@
                             {
                                 <ul class="nav navbar-nav navbar-left">
                                     <li><a asp-action="Users" asp-controller="Role" class="nav-item nav-link active"> Users </a></li>
-                          </ul>
+                                </ul>
+                                 <ul class="nav navbar-nav navbar-left">
+                                    <li><a asp-action="Create" asp-controller="Students" class="nav-item nav-link active">Stud </a></li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li><a asp-action="Create" asp-controller="Proffesors" class="nav-item nav-link active">Proff </a></li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li><a asp-action="Create" asp-controller="Grades" class="nav-item nav-link active">Grad </a></li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li><a asp-action="Create" asp-controller="Departments" class="nav-item nav-link active">Dep </a></li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li><a asp-action="Create" asp-controller="Courses" class="nav-item nav-link active">Cours </a></li>
+                                </ul>
                             }
-                  }
+                            
+                            @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Profesor"))
+                            {
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li><a asp-action="Index" asp-controller="Students" class="nav-item nav-link active"> SDetails </a></li>
+                                </ul>
+                            }
+                        }
                     </div>
           </div>
 

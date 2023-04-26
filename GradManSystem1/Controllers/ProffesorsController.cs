@@ -42,7 +42,7 @@ namespace GradManSystem1.Controllers
         }
 
         // GET: Proffesors
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Profesor")]
         public async Task<IActionResult> Index()
         {
             //var model = new Proffesor();

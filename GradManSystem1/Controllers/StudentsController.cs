@@ -18,7 +18,7 @@ namespace GradManSystem1.Controllers
         }
 
         // GET: Students
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Profesor")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Student.ToListAsync());
@@ -70,7 +70,7 @@ namespace GradManSystem1.Controllers
 
         // GET: Students/Edit/5
 
-        [Authorize(Roles = "Admin,Editors")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Student == null)
