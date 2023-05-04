@@ -4,6 +4,9 @@
 @{
     ViewData["Title"] = "Log in";
 }
+  <head>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+  </head>
 
 <h2>@ViewData["Title"]</h2>
 <div class="row">
@@ -31,6 +34,10 @@
                         </label>
                     </div>
                 </div>
+
+                <div class="g-recaptcha" data-sitekey="6LdHl98lAAAAAMIvyT3C40Fqh7tP3avlMM2L0jm6"></div>
+
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">Log in</button>
                 </div>

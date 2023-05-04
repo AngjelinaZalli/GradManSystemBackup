@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Security.Claims;
 
 namespace GradManSystem1.Areas.Identity.Pages.Account
@@ -46,6 +48,11 @@ namespace GradManSystem1.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+
+            //[Required]
+            //[Display(Name = "reCAPTCHA Response")]
+            //public string RecaptchaResponse { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -68,9 +75,7 @@ namespace GradManSystem1.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             if (ModelState.IsValid)
             {
                 var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
@@ -79,7 +84,6 @@ namespace GradManSystem1.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, "Invalid login attempt");
                     return Page();
                 }
-
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -117,6 +121,19 @@ namespace GradManSystem1.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
+
+            }
+
+            string response = Request.Form["g-recaptcha-response"];
+            string secret = "6LdHl98lAAAAAJveIv1EoInXda2Aoh21laFiBMr3";
+            var client = new WebClient();
+            var result1 = client.DownloadString($"https://www.google.com/recaptcha/api/siteverify?secret={secret}&response={response}");
+            dynamic obj = JsonConvert.DeserializeObject(result1);
+            bool status = obj.success;
+            if (!status)
+            {
+                ModelState.AddModelError("", "reCAPTCHA validation failed.");
+                return Page();
             }
 
             // If we got this far, something failed, redisplay form

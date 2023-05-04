@@ -1,3 +1,4 @@
+using DNTCaptcha.Core;
 using GradManSystem1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,26 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.AddControllersWithViews();
 AddAuthorizationPolicies();
+
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(5);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+}
+);
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "AspNetCore.Identity.Application";
+    options.ExpireTimeSpan = TimeSpan.FromSeconds(5);
+    options.SlidingExpiration = true;
+});
+
+
 
 //var services = builder.Services;
 //var configuration = builder.Configuration;
@@ -70,6 +91,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

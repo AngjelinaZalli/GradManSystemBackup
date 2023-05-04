@@ -1,4 +1,5 @@
-﻿using GradManSystem1.Models;
+﻿using DNTCaptcha.Core;
+using GradManSystem1.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net;
@@ -100,6 +101,9 @@ namespace GradManSystem1.Controllers
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
+
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
