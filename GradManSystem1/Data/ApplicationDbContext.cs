@@ -12,6 +12,7 @@ namespace GradManSystem1.Data
         public DbSet<Grade> Grade { get; set; }
         public DbSet<Department> Department { get; set; }
         public DbSet<Courses> Courses { get; set; }
+        public DbSet<Products> Products { get; set; }
         public DbSet<SendMailDto> SendMailDto { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

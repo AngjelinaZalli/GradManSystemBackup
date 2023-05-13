@@ -37,6 +37,14 @@ namespace GradManSystem1.Controllers
         {
             return View();
         }
+
+        public IActionResult ShoppingCart()
+        {
+            return View();
+        }
+
+
+
         //[HttpPost]
         //public async Task<IActionResult> SignIn(ViewModel.SignInViewModel SignInViewModel)
         //{

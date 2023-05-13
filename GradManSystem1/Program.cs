@@ -33,20 +33,20 @@ AddAuthorizationPolicies();
 
 builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromSeconds(5);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-}
-);
+//builder.Services.AddSession(options =>
+//{
+//    options.IdleTimeout = TimeSpan.FromSeconds(5);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.IsEssential = true;
+//}
+//);
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.Name = "AspNetCore.Identity.Application";
-    options.ExpireTimeSpan = TimeSpan.FromSeconds(5);
-    options.SlidingExpiration = true;
-});
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.Cookie.Name = "AspNetCore.Identity.Application";
+//    options.ExpireTimeSpan = TimeSpan.FromSeconds(5);
+//    options.SlidingExpiration = true;
+//});
 
 
 
@@ -91,7 +91,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
+//app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
