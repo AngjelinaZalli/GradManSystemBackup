@@ -69,36 +69,7 @@ namespace GradManSystem1.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Grade_Courses_CoursesId",
-                table: "Grade");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Grade_Proffesor_ProffesorId",
-                table: "Grade");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Grade_Student_StudentId",
-                table: "Grade");
-
-            migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Grade_CoursesId",
-                table: "Grade");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Grade_ProffesorId",
-                table: "Grade");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Grade_StudentId",
-                table: "Grade");
-
-            migrationBuilder.DropColumn(
-                name: "UserId",
-                table: "Student");
+          
         }
     }
 }
