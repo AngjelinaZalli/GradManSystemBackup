@@ -1,13 +1,12 @@
 ﻿@*Combining both shopping cart and checkout on a single page providing an extensive summary
 o purchased products, subtotals, shipping cost and total price.*@
 @model List<GradManSystem1.Models.Products>
-
+<form>
 <section class="h-100 h-custom">
     <div class="container h-100 py-5">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col">
                 <div class="table-responsive">
-                    -----------------------------------------------------------------
                     <table class="table">
                         <thead>
                             <tr>
@@ -38,7 +37,7 @@ o purchased products, subtotals, shipping cost and total price.*@
                                     <p class="mb-0" style="font-weight: 500;">$@item.Price</p>
                                 </td>
                                 <td class="align-middle">
-                                    <button asp-route-id="@item.Id" id="submit_banner" class="getappBtn" type="submit" value="submit">Add to Cart!</button>
+                                            <button asp-route-id="@item.Id" asp-controller="Products" asp-action="AddToCart" class="btn btn-primary btn-block btn-lg" formnovalidate>Add to Cart!</button>
                                 </td>
                               </tr>
                             }
@@ -46,8 +45,8 @@ o purchased products, subtotals, shipping cost and total price.*@
                              </tbody>
                     </table>
                 </div>
-
-                <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
+</form>
+<div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
                     <div class="card-body p-4">
 
                         <div class="row">
@@ -94,27 +93,27 @@ o purchased products, subtotals, shipping cost and total price.*@
                                     <div class="col-12 col-xl-6">
                                         <div class="form-outline mb-4 mb-xl-5">
                                             <input type="text" id="typeName" class="form-control form-control-lg" siez="17"
-                                                   placeholder="Full Name" />
-                                            <label class="form-label" for="typeName">Name on card</label>
+                                   placeholder="Full Name" required aria-required="true" data-error="Please enter your name." />
+                            <label class="form-label" for="typeName">Name on card</label>
                                         </div>
 
                                         <div class="form-outline mb-4 mb-xl-5">
                                             <input type="text" id="typeExp" class="form-control form-control-lg" placeholder="MM/YY"
-                                                   size="7" id="exp" minlength="7" maxlength="7" />
-                                            <label class="form-label" for="typeExp">Expiration</label>
+                                   size="7" id="exp" minlength="7" maxlength="7" required aria-required="true" data-error="Please enter your name." />
+                            <label class="form-label" for="typeExp">Expiration</label>
                                         </div>
                                     </div>
                                     <div class="col-12 col-xl-6">
                                         <div class="form-outline mb-4 mb-xl-5">
                                             <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
-                                                   placeholder="1111 2222 3333 4444" minlength="19" maxlength="19" />
-                                            <label class="form-label" for="typeText">Card Number</label>
+                                   placeholder="1111 2222 3333 4444" minlength="19" maxlength="19" required aria-required="true" data-error="Please enter your name." />
+                            <label class="form-label" for="typeText">Card Number</label>
                                         </div>
 
                                         <div class="form-outline mb-4 mb-xl-5">
                                             <input type="password" id="typeText" class="form-control form-control-lg"
-                                                   placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
-                                            <label class="form-label" for="typeText">Cvv</label>
+                                   placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" required aria-required="true" data-error="Please enter your name." />
+                            <label class="form-label" for="typeText">Cvv</label>
                                         </div>
                                     </div>
                                 </div>
@@ -122,19 +121,13 @@ o purchased products, subtotals, shipping cost and total price.*@
                             <div class="col-lg-4 col-xl-3">
                                 <div class="d-flex justify-content-between" style="font-weight: 500;">
                                     <p class="mb-2">Subtotal</p>
-                                    @{
                                         @ViewBag.subtotal
-                                    }
                                 </div>
 
-                                <button type="button" class="btn btn-primary btn-block btn-lg">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Checkout</span>
-                                        @{
-                                            @ViewBag.subtotal
-                                        }
-                                    </div>
-                                </button>
+                             <button asp-controller="Products" asp-action="PaymentWithPaypal" class="btn btn-primary btn-block btn-lg">
+                                Checkout
+                             </button>
+
 
                             </div>
                         </div>

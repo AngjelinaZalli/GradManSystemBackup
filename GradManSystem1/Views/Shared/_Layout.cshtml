@@ -32,60 +32,36 @@
 <body>
 
  <header class="header">
-   <div class="topbar clearfix">
-       <div class="container">
-          <div class="row-fluid">
-              <div class="col-md-6 col-sm-6 text-left">
-                  <p>
-                      <i class="fas fa-phone me-3"></i>
-                      <a href="tel: +355 4 255 6987  " class="text-gray-400 text-decoration-none">  +355 4 255 6987    </a>
-                      <strong><i class="fa fa-envelope"></i></strong> <a href="mailto:#">info@fshn.edu.al</a>
-                  </p>
-              </div><!-- end left -->
-              <div class="col-md-6 col-sm-6 hidden-xs text-right">
-                  <div class="social">
-                      <a class="facebook" href="https://www.facebook.com/Fakulteti-i-shkencave-te-natyres-FSHN-199900361070/" data-tooltip="tooltip" data-placement="bottom" title="Facebook"><i class="fa fa-facebook"></i></a>
-                      @* <a class="twitter" href="#" data-tooltip="tooltip" data-placement="bottom" title="Twitter"><i class="fa fa-twitter"></i></a>*@
-                      <a class="google" href="https://unitir.edu.al/fakulteti-i-shkencave-te-natyres/" data-tooltip="tooltip" data-placement="bottom" title="Google"><i class="fa fa-google"></i></a>
-                      <a class="linkedin" href="https://al.linkedin.com/company/fakulteti-i-shkencave-t%C3%AB-natyr%C3%ABs?trk=public_profile_profile-section-card_subtitle-click" data-tooltip="tooltip" data-placement="bottom" title="Linkedin"><i class="fa fa-linkedin"></i></a>
-                      @*<a class="pinterest" href="#" data-tooltip="tooltip" data-placement="bottom" title="Pinterest"><i class="fa fa-pinterest"></i></a>*@
-                  </div><!-- end social -->
-              </div><!-- end left -->
-          </div><!-- end row -->
-       </div><!-- end container -->
-       </div><!-- end topbar -->
-   <div class="container">
+   @*<div class="topbar clearfix">*@
+       
+    <div class="container">
        <nav class="navbar navbar-default yamm">
           <div class="navbar-header">
               <div class="logo-normal">
 
-                 
                         @if (!SignInManager.IsSignedIn(User))
                         {
-                      <ul class="nav navbar-nav navbar-left">
+                      <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                           <li><a asp-action="Index" asp-controller="Home" class="nav-item nav-link active"> Home </a></li>
                       </ul>
-                      <ul class="nav navbar-nav navbar-left">
+                      <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                           <li><a asp-action="Contact" asp-controller="Home" class="nav-item nav-link active"> Contact </a></li>
                       </ul>
-                      <ul class="nav navbar-nav navbar-left">
+                      <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                           <li class="nav-item">
                               <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
                           </li>
                       </ul>
-                            <ul class="nav navbar-nav navbar-left">
-                                <li><a asp-action="Index" asp-controller="Products" class="nav-item nav-link active"> ShoppingCart </a></li>
-                            </ul>
                   }
                   else
                   {
-                            <ul class="nav navbar-nav navbar-left">
+                            <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                 <li><a asp-action="Index" asp-controller="Home" class="nav-item nav-link active"> Home </a></li>
                             </ul>
-                      <ul class="nav navbar-nav navbar-left">
+                            <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                           <li><a asp-action="Contact" asp-controller="Home" class="nav-item nav-link active"> Contact </a></li>
                       </ul>
-                      <ul class="nav navbar-nav navbar-left">
+                            <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                       <li class="nav-item">
                          <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
                              <button type="submit" class="nav-link btn btn-link text-dark"> Logout</button>
@@ -96,35 +72,38 @@
                       {
                           var user = SignInManager.UserManager.Users.Where(x => x.Email == User.Identities.FirstOrDefault().Name).Select(x => x.Id);
                           var userId = user.FirstOrDefault();
-                          <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                               <li><a asp-action="Grades" asp-controller="Students" asp-route-id="@userId" class="nav-item nav-link active"> Grades </a></li>
                           </ul>
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
+                                    <li><a asp-action="Index" asp-controller="Products" class="nav-item nav-link active"> ShoppingCart </a></li>
+                                </ul>
                       }
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Admin"))
                             {
-                                <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Users" asp-controller="Role" class="nav-item nav-link active"> Users </a></li>
                                 </ul>
-                                 <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Students" class="nav-item nav-link active">Stud </a></li>
                                 </ul>
-                                <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left"  style="margin-right: 10px;"> 
                                     <li><a asp-action="Create" asp-controller="Proffesors" class="nav-item nav-link active">Proff </a></li>
                                 </ul>
-                                <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Grades" class="nav-item nav-link active">Grad </a></li>
                                 </ul>
-                                <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Departments" class="nav-item nav-link active">Dep </a></li>
                                 </ul>
-                                <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Courses" class="nav-item nav-link active">Cours </a></li>
                                 </ul>
                             }
                             
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Profesor"))
                             {
-                                <ul class="nav navbar-nav navbar-left">
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Index" asp-controller="Students" class="nav-item nav-link active"> SDetails </a></li>
                                 </ul>
                             }

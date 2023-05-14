@@ -33,13 +33,13 @@ AddAuthorizationPolicies();
 
 builder.Services.AddDistributedMemoryCache();
 
-//builder.Services.AddSession(options =>
-//{
-//    options.IdleTimeout = TimeSpan.FromSeconds(5);
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.IsEssential = true;
-//}
-//);
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+}
+);
 
 //builder.Services.ConfigureApplicationCookie(options =>
 //{
@@ -91,7 +91,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseSession();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
