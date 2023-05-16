@@ -14,7 +14,7 @@ namespace GradManSystem1.Data
         public DbSet<Courses> Courses { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<SendMailDto> SendMailDto { get; set; }
-        public IEnumerable<object> UserProducts { get; internal set; }
+        public DbSet<UserProducts> UserProducts { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -1,0 +1,25 @@
+﻿@model IEnumerable<GradManSystem1.Models.UserViewModel>
+<h3>Menaxhimi i përdoruesve</h3>
+<table class="table table-sm table-bordered">
+<tr><th>Emri</th><th>Email</th></tr>
+@if (Model.Count() == 0) {
+<tr><td colspan="4" class="text-center">Nuk ka llogari Përdoruesish</td></tr>
+} else {
+foreach (var user in Model) {
+<tr>
+<td>@user.UserName</td>
+<td>@user.Email</td>
+@*<td>@user.BirthDate.ToString("d")</td>*@
+<td class="text-center">
+                    <a class="btn btn-sm btn-primary" asp-controller="Admin"
+               asp-route-id="@user.Id" asp-action="ShowEdit">Edit</a>
+                    <form method="post" asp-controller="Admin" asp-action="Delete" asp-routeid="@user.Id">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    }
+</table>

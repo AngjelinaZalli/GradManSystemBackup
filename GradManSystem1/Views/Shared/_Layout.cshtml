@@ -99,6 +99,9 @@
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Courses" class="nav-item nav-link active">Cours </a></li>
                                 </ul>
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
+                                    <li><a asp-action="Index" asp-controller="Admin" class="nav-item nav-link active">Manage Users </a></li>
+                                </ul>
                             }
                             
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Profesor"))

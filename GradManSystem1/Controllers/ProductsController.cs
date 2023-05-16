@@ -1,16 +1,17 @@
 ﻿using GradManSystem1.Data;
-using GradManSystem1.Data.Migrations;
 using GradManSystem1.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PayPal.Api;
+using System.Data.Entity;
 
 namespace GradManSystem1.Controllers
 {
     public class ProductsController : Controller
     {
-        private static decimal P_Subtotal=0;
-        private  List<UserProducts> P_UserProducts = new List<UserProducts>();
+        private static decimal P_Subtotal = 0;
+        private static List<UserProducts> userProducts = new List<UserProducts>();
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDbContext _context;
         private IHttpContextAccessor _httpContextAccessor;
@@ -31,23 +32,55 @@ namespace GradManSystem1.Controllers
         }
         public IActionResult AddToCart(int id)
         {
-            P_Subtotal += _context.Products.Where(x => x.Id == id).Select(x => x.Price).FirstOrDefault();
-            ViewBag.subtotal = P_Subtotal;
-            var currentUserId = User.Identity.GetUserId().ToString();
-            var userproduct = new UserProducts()
+            if(!userProducts.Select(x => x.Id).Contains(id))
             {
-                UserId = Guid.Parse(currentUserId),
-                ProductId = id
-            };
-            P_UserProducts.Add(userproduct);
-            ViewData["userprod"] = P_UserProducts;
-            var products = _context.Products.ToList();
+                P_Subtotal += _context.Products.Where(x => x.Id == id).Select(x => x.Price).FirstOrDefault();
+                ViewBag.subtotal = P_Subtotal;
+                var currentUserId = User.Identity.GetUserId().ToString();
+                var userproduct = new UserProducts()
+                {
+                    UserId = Guid.Parse(currentUserId),
+                    ProductId = id
+                };
+                userProducts.Add(userproduct);
+                TempData["userprod"] = JsonConvert.SerializeObject(userProducts);
 
+                _context.SaveChanges();
+            }
+            var products = _context.Products.ToList();
             return View("Index", products);
         }
 
+        public IActionResult ViewCart()
+        {
+            var userProduct = _context.UserProducts
+                                    .Include(x => x.Product)
+                                    .Where(x => x.UserId.ToString() == User.Identity.GetUserId().ToString())
+                                    .Select(x => x.Product)
+                                    .ToList();
+            return View(userProduct.DistinctBy(x => x.Id).ToList());
+        }
+        public IActionResult Delete(int id)
+        {
+            var currentUserId = User.Identity.GetUserId().ToString();
+            var userProduct = _context.UserProducts
+                .FirstOrDefault(x => x.UserId.ToString() == currentUserId && x.ProductId == id);
+
+            if (userProduct != null)
+            {
+                _context.UserProducts.Remove(userProduct);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("ViewCart");
+        }
+
+
         public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
+            
+            //_context.AddRangeAsync(userProducts);
+            //_context.SaveChanges();
             //getting the apiContext  
             var ClientID = _configuration.GetValue<string>("PayPal:Key");
             var ClientSecret = _configuration.GetValue<string>("PayPal:Secret");
@@ -86,9 +119,7 @@ namespace GradManSystem1.Controllers
                     }
                     // saving the paymentID in the key guid  
                     _httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
-                    var prod = ViewData["userprod"];
-                    _context.AddRangeAsync(prod);
-                    _context.SaveChanges();
+                    
                     return Redirect(paypalRedirectUrl);
                 }
                 else
@@ -103,8 +134,13 @@ namespace GradManSystem1.Controllers
 
                         return View("PaymentFailed");
                     }
-                    _context.AddRangeAsync(P_UserProducts);
-                    _context.SaveChanges();
+
+                    if (TempData.ContainsKey("userprod"))
+                    {
+                        var prod = TempData["userprod"];
+                        _context.AddRange(userProducts.DistinctBy(x => x.ProductId).Where(x => x.Id == 0));
+                        _context.SaveChanges();
+                    }
                     var blogIds = executedPayment.transactions[0].item_list.items[0].sku;
                     return View("PaymentSuccess");
                 }
@@ -158,7 +194,7 @@ namespace GradManSystem1.Controllers
             };
             //Final amount with details
             var amount = new Amount()
-            { 
+            {
                 currency = "USD",
                 total = P_Subtotal.ToString(),
             };

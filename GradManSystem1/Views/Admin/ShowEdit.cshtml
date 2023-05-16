@@ -1,0 +1,31 @@
+﻿@model GradManSystem1.Models.UserViewModel
+<form method="post" class="mt-3" asp-action="Edit" asp-controller="Admin" asproute-Id="@Model.Id">
+ 
+ <div class="form-group row">
+ <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+ <div class="col-sm-10">
+ <input asp-for="Email" class="form-control">
+ <span asp-validation-for="Email" class="text-danger"></span>
+ </div>
+ </div>
+ <div class="form-group row">
+ <label asp-for="UserName" class="col-sm-2 col-form-label"></label>
+ <div class="col-sm-10">
+ <input asp-for="UserName" class="form-control">
+ <span asp-validation-for="UserName" class="text-danger"></span>
+ </div>
+ </div>
+ @*<div class="form-group row">
+ <label asp-for="BirthDate" class="col-sm-2 col-form-label"></label>
+ <div class="col-sm-10">
+ <input asp-for="BirthDate" class="form-control">
+ </div>
+ </div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Ruaj</button>
+            <a asp-action="Index" class="btn btn-primary">Anulo</a>
+        </div>
+    </div>
+</form>
