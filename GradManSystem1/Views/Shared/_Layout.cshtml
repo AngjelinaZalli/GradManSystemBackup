@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="~/css/carousel.css">
     <link rel="stylesheet" href="~/css/animate.css">
     <link rel="stylesheet" href="~/style.css">
-
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/shopping-cart.css' rel='stylesheet'>
     <link rel="stylesheet" href="~/GradManSystem1.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -76,7 +76,7 @@
                               <li><a asp-action="Grades" asp-controller="Students" asp-route-id="@userId" class="nav-item nav-link active"> Grades </a></li>
                           </ul>
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
-                                    <li><a asp-action="Index" asp-controller="Products" class="nav-item nav-link active"> ShoppingCart </a></li>
+                                    <li><a asp-action="Index" asp-controller="Products" class="nav-item nav-link active"><i class="gg-shopping-cart fa-spin"></i></a></li>
                                 </ul>
                       }
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Admin"))

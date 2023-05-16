@@ -1,4 +1,5 @@
 ﻿using GradManSystem1.Data;
+using GradManSystem1.Data.Migrations;
 using GradManSystem1.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +9,8 @@ namespace GradManSystem1.Controllers
 {
     public class ProductsController : Controller
     {
-        private decimal P_Subtotal;
-        private List<UserProducts> P_UserProducts = new List<UserProducts>();
+        private static decimal P_Subtotal=0;
+        private  List<UserProducts> P_UserProducts = new List<UserProducts>();
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDbContext _context;
         private IHttpContextAccessor _httpContextAccessor;
@@ -45,12 +46,6 @@ namespace GradManSystem1.Controllers
             return View("Index", products);
         }
 
-        public IActionResult Checkout()
-        {
-           
-            return View();
-        }
-
         public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
             //getting the apiContext  
@@ -60,15 +55,24 @@ namespace GradManSystem1.Controllers
             APIContext apiContext = PaypalConfiguration.GetAPIContext(ClientID, ClientSecret, mode);
             try
             {
+                //A resource representing a Payer that funds a payment Method as Paypal
+                //Payer Id will me returned when payment proceeds or click to pay
                 string payerId = PayerID;
                 if (string.IsNullOrEmpty(payerId))
                 {
+                    //This section will be executed first because PayerIdd doesn'tt exist
+                    //it is returned by the create function call of the payment class
+                    //Creating a payment
+                    //baseURL is the url on which paypal sends back the data
                     string baseURI = this.Request.Scheme + "://" + this.Request.Host + "/Products/PaymentWithPayPal?";
-
+                    //Here we are generating guid for storing the paymentID received in session
+                    //which will be used in the payment execution
                     var guidd = Convert.ToString((new Random()).Next(100000));
                     guid = guidd;
-
+                    //CreatePayment function gives us the payment approval url
+                    //on which payer is redirected for paypal account payment
                     var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
+                    //Get links returned from paypal in responce to Create function call
                     var links = createdPayment.links.GetEnumerator();
                     string paypalRedirectUrl = null;
                     while (links.MoveNext())
@@ -76,6 +80,7 @@ namespace GradManSystem1.Controllers
                         Links lnk = links.Current;
                         if (lnk.rel.ToLower().Trim().Equals("approval_url"))
                         {
+                            //saving the paypalredirect URL to which user will be redirected for payment
                             paypalRedirectUrl = lnk.href;
                         }
                     }
@@ -108,8 +113,10 @@ namespace GradManSystem1.Controllers
             {
                 return View("PaymentFailed");
             }
+            //On successful payment,show success page to user
             return View("SuccessView");
         }
+
         private PayPal.Api.Payment payment;
         private Payment ExecutePayment(APIContext apiContext, string payerId, string paymentId)
         {
@@ -125,6 +132,7 @@ namespace GradManSystem1.Controllers
         }
         private Payment CreatePayment(APIContext apiContext, string redirectUrl, string blogId)
         {
+            //Create itemlist and add item objects to it
             var itemList = new ItemList()
             {
                 items = new List<Item>()
@@ -134,7 +142,7 @@ namespace GradManSystem1.Controllers
             {
                 name = "Item Detail",
                 currency = "USD",
-                price = "1.00",
+                price = P_Subtotal.ToString("F"),
                 quantity = "1",
                 sku = "asd"
             });
@@ -148,18 +156,18 @@ namespace GradManSystem1.Controllers
                 cancel_url = redirectUrl + "&Cancel=true",
                 return_url = redirectUrl
             };
-
+            //Final amount with details
             var amount = new Amount()
-            {
+            { 
                 currency = "USD",
-                total = "1.00",
+                total = P_Subtotal.ToString(),
             };
             var transactionList = new List<Transaction>();
-
+            //Adding description about the transaction
             transactionList.Add(new Transaction()
             {
                 description = "Transaction description",
-                invoice_number = Guid.NewGuid().ToString(),
+                invoice_number = Guid.NewGuid().ToString(),//Generate an Invoice No
                 amount = amount,
                 item_list = itemList
             });
