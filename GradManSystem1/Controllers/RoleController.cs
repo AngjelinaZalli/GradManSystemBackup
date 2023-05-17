@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GradManSystem1.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,14 @@ namespace GradManSystem1.Controllers
         private readonly Microsoft.AspNetCore.Identity.UserManager<Microsoft.AspNetCore.Identity.IdentityUser> _userManager;
         private readonly SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> _signInManager;
         private readonly Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
-        public RoleController(SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> signInManager, Microsoft.AspNetCore.Identity.UserManager<Microsoft.AspNetCore.Identity.IdentityUser> userManager, Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> roleManager)
+        public RoleController(SignInManager<Microsoft.AspNetCore.Identity.IdentityUser> signInManager, Microsoft.AspNetCore.Identity.UserManager<Microsoft.AspNetCore.Identity.IdentityUser> userManager, Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> roleManager, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -35,11 +38,17 @@ namespace GradManSystem1.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> Users(string searchString)
         {
-            List<Microsoft.AspNetCore.Identity.IdentityUser> user = GetListUsers();
+            var users = from c in _context.Users select c;
 
-            return View(user);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(c => c.UserName.StartsWith(searchString));
+            }
+            List < Microsoft.AspNetCore.Identity.IdentityUser > user = GetListUsers();
+
+            return View(await users.ToListAsync());
         }
 
         private List<Microsoft.AspNetCore.Identity.IdentityUser> GetListUsers()
@@ -106,6 +115,10 @@ namespace GradManSystem1.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid edit user attempt");
                 return View();
             }
+
+            var existingRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, existingRoles);
+
             await _userManager.AddToRoleAsync(user, roleId);
             List<Microsoft.AspNetCore.Identity.IdentityUser> users = GetListUsers();
             return View("Users", users);

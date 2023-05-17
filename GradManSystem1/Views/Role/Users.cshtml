@@ -6,6 +6,17 @@
 <div class="text-center">
     <h1 class="display-4">Users</h1>
 
+    <form asp-controller="Role" asp-action="Users" method="get">
+        <div class="row">
+            <div class="col-md-4 d-flex align-items-center">
+                <input type="text" value="Search" name="searchString" class="form-control" />
+                <div class="input-group-append">
+                    <input type="submit" value="Filter" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </form>
+
     @if(@Model != null)
     {
         <table class="table">
