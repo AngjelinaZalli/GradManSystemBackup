@@ -82,7 +82,10 @@
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Admin"))
                             {
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
-                                    <li><a asp-action="Users" asp-controller="Role" class="nav-item nav-link active"> Users </a></li>
+                                    <li><a asp-action="Index" asp-controller="Admin" class="nav-item nav-link active">ManUsers </a></li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
+                                    <li><a asp-action="Users" asp-controller="Role" class="nav-item nav-link active">ManRoles </a></li>
                                 </ul>
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Students" class="nav-item nav-link active">Stud </a></li>
@@ -99,9 +102,7 @@
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Courses" class="nav-item nav-link active">Cours </a></li>
                                 </ul>
-                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
-                                    <li><a asp-action="Index" asp-controller="Admin" class="nav-item nav-link active">Manage Users </a></li>
-                                </ul>
+                          
                             }
                             
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Profesor"))

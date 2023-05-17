@@ -1,9 +1,11 @@
 ﻿using GradManSystem1.Data;
 using GradManSystem1.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PayPal.Api;
+using System.Data;
 using System.Data.Entity;
 
 namespace GradManSystem1.Controllers
@@ -24,12 +26,15 @@ namespace GradManSystem1.Controllers
             _httpContextAccessor = httpContextAccessor;
             _configuration = iconfiguration;
         }
+
+        [Authorize(Roles = "Student")]
         public IActionResult Index()
         {
             ViewBag.subtotal = P_Subtotal;
             var products = _context.Products.ToList();
             return View(products);
         }
+        [Authorize(Roles = "Student")]
         public IActionResult AddToCart(int id)
         {
             if(!userProducts.Select(x => x.Id).Contains(id))
@@ -51,6 +56,7 @@ namespace GradManSystem1.Controllers
             return View("Index", products);
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult ViewCart()
         {
             var userProduct = _context.UserProducts
@@ -60,6 +66,7 @@ namespace GradManSystem1.Controllers
                                     .ToList();
             return View(userProduct.DistinctBy(x => x.Id).ToList());
         }
+        [Authorize(Roles = "Student")]
         public IActionResult Delete(int id)
         {
             var currentUserId = User.Identity.GetUserId().ToString();
@@ -76,6 +83,7 @@ namespace GradManSystem1.Controllers
         }
 
 
+        [Authorize(Roles = "Student")]
         public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
             
