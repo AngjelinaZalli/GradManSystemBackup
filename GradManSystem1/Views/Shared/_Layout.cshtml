@@ -79,14 +79,21 @@
                           var user = SignInManager.UserManager.Users.Where(x => x.Email == User.Identities.FirstOrDefault().Name).Select(x => x.Id);
                           var userId = user.FirstOrDefault();
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
-                              <li><a asp-action="Grades" asp-controller="Students" asp-route-id="@userId" class="nav-item nav-link active"> Grades </a></li>
-                          </ul>
+                              <li><a asp-action="Grades" asp-controller="Students"  class="nav-item nav-link active"> Grades </a></li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
+                                    <li><a asp-action="UserDetails" asp-controller="User" class="nav-item nav-link active">Profile</a></li>
+                                </ul>
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Index" asp-controller="Products" class="nav-item nav-link active"><i class="gg-shopping-cart fa-spin"></i></a></li>
                                 </ul>
+                               
                       }
                             @if (User.Claims.Any(x => x.Type == "Roles" && x.Value == "Admin"))
                             {
+                                <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
+                                    <li><a asp-action="UserDetails" asp-controller="User" class="nav-item nav-link active">Profile</a></li>
+                                </ul>
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Index" asp-controller="Admin" class="nav-item nav-link active">ManUsers </a></li>
                                 </ul>

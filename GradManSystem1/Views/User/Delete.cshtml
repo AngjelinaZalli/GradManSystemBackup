@@ -1,0 +1,22 @@
+﻿@model GradManSystem1.Models.UserViewModel
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+            <div class="col-xl-6 col-md-12">
+                <div class="card user-card-full">
+                    <div class="row m-l-0 m-r-0">
+                        <div class=" bg-c-lite-green user-profile">
+                            <div class="card-block text-center text-white">
+                                <h4>SURE U WANT TO DELETE YOUR PROFILE?</h4>
+                                <form asp-action="DeleteConfirmed" method="post" asp-route-id="@Model.Id">
+                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                </form>
+                                <a asp-action="UserDetails" class="btn btn-success">Go Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

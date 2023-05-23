@@ -1,0 +1,70 @@
+﻿@model GradManSystem1.Models.UserViewModel
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-c-lite-green text-center text-white">
+                    <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
+                    <h6 class="f-w-600">@Model.UserName</h6>
+                    <h6 class="f-w-600">@Model.Role</h6>
+                    <i class="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-center m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p class="m-b-10 f-w-600">Email</p>
+                            <h6 class="text-muted f-w-400">@Model.Email</h6>
+                        </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-info" href="/User/Edit/@Model.Id">Modify</a>
+                    <a class="btn btn-primary" href="/User/ShowPasswordForm/@Model.Id">Change Password</a>
+                    <a class="btn btn-danger" href="/User/Delete/@Model.Id">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f9f9fa;
+    }
+
+    .img-radius {
+        border-radius: 5px;
+    }
+
+    .bg-c-lite-green {
+        background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#ee5a6f));
+        background: linear-gradient(to right, #ee5a6f, #f29263);
+    }
+
+    .card-header {
+        padding: 20px 0;
+    }
+
+    .card-title {
+        font-size: 14px;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+        .card-body p {
+            font-size: 14px;
+            line-height: 25px;
+        }
+
+        .card-body .m-b-10 {
+            margin-bottom: 10px;
+        }
+
+    .card-footer {
+        padding: 15px 0;
+    }
+</style>
