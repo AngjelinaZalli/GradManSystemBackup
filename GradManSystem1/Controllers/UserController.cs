@@ -8,7 +8,8 @@ using GradManSystem1.Data;
 
 namespace GradManSystem1.Controllers
 {
-    [Authorize]
+    [Authorize] 
+
     public class UserController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
