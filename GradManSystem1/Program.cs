@@ -1,4 +1,5 @@
 using GradManSystem1.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddRoles<IdentityRole>()
@@ -38,27 +46,23 @@ builder.Services.AddSession(options =>
 }
 );
 
-//builder.Services.ConfigureApplicationCookie(options =>
-//{
-//    options.Cookie.Name = "AspNetCore.Identity.Application";
-//    options.ExpireTimeSpan = TimeSpan.FromSeconds(5);
-//    options.SlidingExpiration = true;
-//});
 
 
 
-//var services = builder.Services;
-//var configuration = builder.Configuration;
-//services.AddAuthentication().AddGoogle(options =>
-//{
-//    options.ClientId = configuration["Authentication:Google:ClientId"];
-//    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-//});
-//services.AddAuthentication().AddFacebook(options =>
-//{
-//    options.ClientId = configuration["Authentication:Facebook:ClientId"];
-//    options.ClientSecret = configuration["Authentication:Facebook:ClientSecret"];
-//});
+var services = builder.Services;
+var configuration = builder.Configuration;
+services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+});
+services.AddAuthentication().AddMicrosoftAccount(options =>
+{
+    options.ClientId = configuration["MicrosoftClientId"]!;
+    options.ClientSecret = configuration["MicrosoftSecretId"]!;
+});
+
+
 
 //builder.Services.AddAuthorization(options =>
 //{
@@ -83,12 +87,13 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseCookiePolicy();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
 
 app.MapControllerRoute(
     name: "default",

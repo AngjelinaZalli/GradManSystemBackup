@@ -40,7 +40,7 @@ namespace GradManSystem1.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 UserName = user.UserName,
-                //BirthDate = user.BirthDate,
+   
             };
             return View(model);
         }
@@ -56,7 +56,7 @@ namespace GradManSystem1.Controllers
             {
                 user.Email = model.Email;
                 user.UserName = model.UserName;
-                //user.BirthDate = model.BirthDate;
+                
                 var result = await UserManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {

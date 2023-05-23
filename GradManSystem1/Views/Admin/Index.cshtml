@@ -9,7 +9,6 @@ foreach (var user in Model) {
 <tr>
 <td>@user.UserName</td>
 <td>@user.Email</td>
-@*<td>@user.BirthDate.ToString("d")</td>*@
 <td class="text-center">
                     <a class="btn btn-sm btn-primary" asp-controller="Admin"
                asp-route-id="@user.Id" asp-action="ShowEdit">Edit</a>

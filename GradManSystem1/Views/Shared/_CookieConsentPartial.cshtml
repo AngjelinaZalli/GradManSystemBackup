@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeatureFlag = Context.Features.Get<ITrackingConsentFeature>();
+    var showBannerFlag = !consentFeatureFlag?.CanTrack ?? false;
+    var cookieStr = consentFeatureFlag?.CreateConsentCookie();
+
+    // Vendosni kohën e skadimit në minutat e dëshiruara
+    var expirationSeconds = 120; // Për shembull, 2 minuta
+    if (!string.IsNullOrEmpty(cookieStr))
+    {
+        cookieStr += $"; Expires={DateTime.UtcNow.AddSeconds(expirationSeconds).ToString("R")}";
+    }
+}
+
+@if (showBannerFlag)
+{
+    <div id="cookieConsentdiv">
+        <h3 class="display-6">Cookie Policy</h3>
+        <p>PLEASE ACCEPT OUR <a asp-page="/CookiePolicy">COOKIE POLICY</a>.   </p>
+        <button type="button" data-cookie-string="@cookieStr">
+            <span aria-hidden="true">Accept</span>
+        </button>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#cookieConsentdiv button[data-cookie-string]").bind("click", function () {
+                document.cookie = $("#cookieConsentdiv button").attr("data-cookie-string");
+                $("#cookieConsentdiv").hide();
+            });
+        });
+    </script>
+}
+
+<style>
+
+    #cookieConsentdiv {
+        z-index: 1000;
+        position: fixed;
+        width: 500px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px 30px 20px 30px;
+        font-family: 'Century Gothic', sans-serif;
+        box-shadow: 0px 3px 10px 5px rgba(0, 0, 0, 0.4);
+        text-align: center;
+        border-radius: 30px 30px 0 0;
+    }
+
+        #cookieConsentdiv button {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: none;
+            background-color: green;
+            padding: 10px 50px;
+            margin-top: -5px;
+            color: white;
+            transition: all ease 0.5s;
+        }
+
+            #cookieConsentdiv button:hover {
+                background-color: darkgreen;
+            }
+
+        #cookieConsentdiv h3 {
+            font-size: 30px;
+        }
+
+        #cookieConsentdiv p {
+            font-size: 20px;
+        }
+
+        #cookieConsentdiv a {
+            color: gray;
+            text-decoration: underline;
+        }
+</style>
