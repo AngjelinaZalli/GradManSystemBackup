@@ -97,11 +97,11 @@ namespace GradManSystem1.Controllers
             try
             {
                 //A resource representing a Payer that funds a payment Method as Paypal
-                //Payer Id will me returned when payment proceeds or click to pay
+                //Payer Id will be returned when payment proceeds or click to pay
                 string payerId = PayerID;
                 if (string.IsNullOrEmpty(payerId))
                 {
-                    //This section will be executed first because PayerIdd doesn'tt exist
+                    //This section will be executed first because PayerIdd doesn't exist
                     //it is returned by the create function call of the payment class
                     //Creating a payment
                     //baseURL is the url on which paypal sends back the data

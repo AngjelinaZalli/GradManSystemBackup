@@ -93,7 +93,7 @@ namespace GradManSystem1.Controllers
 
 
         // GET: Grades/Create
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             PopulateStudentsDropDownList();
@@ -107,7 +107,7 @@ namespace GradManSystem1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("GradeMark,StudentId,CoursesId,ProffesorId")] Grade grade)
         {
             if (ModelState.IsValid)
@@ -122,7 +122,7 @@ namespace GradManSystem1.Controllers
         }
 
         // GET: Grades/Edit/5
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Grade == null)
@@ -143,7 +143,7 @@ namespace GradManSystem1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("GradeMark,Id")] Grade grade)
         {
             if (id != grade.Id)
@@ -177,7 +177,7 @@ namespace GradManSystem1.Controllers
 
         // GET: Grades/Delete/5
 
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Grade == null)
@@ -198,7 +198,7 @@ namespace GradManSystem1.Controllers
         // POST: Grades/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Grade == null)

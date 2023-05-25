@@ -1,4 +1,5 @@
 ﻿using GradManSystem1.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,8 @@ namespace GradManSystem1.Controllers
             this.RoleManager = roleManager;
 
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var users = UserManager.Users.Select(user => new UserViewModel()
@@ -27,6 +30,8 @@ namespace GradManSystem1.Controllers
             });
             return View(users);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> ShowEdit(string id)
         {
@@ -44,6 +49,8 @@ namespace GradManSystem1.Controllers
             };
             return View(model);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(UserViewModel model)
         {
@@ -69,6 +76,8 @@ namespace GradManSystem1.Controllers
                 return View(model);
             }
         }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             IdentityUser user = await UserManager.FindByIdAsync(id);

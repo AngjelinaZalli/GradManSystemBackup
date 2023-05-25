@@ -21,11 +21,13 @@ namespace GradManSystem1.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit()
         {
             return View();

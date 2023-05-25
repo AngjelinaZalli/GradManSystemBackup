@@ -1,5 +1,7 @@
 ﻿using GradManSystem1.Data;
 using GradManSystem1.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,7 @@ namespace GradManSystem1.Controllers
         }
 
         // GET: Students
-        [Authorize(Roles = "Admin,Profesor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Student.ToListAsync());
@@ -185,9 +187,10 @@ namespace GradManSystem1.Controllers
         }
 
         [Authorize(Policy = "Student")]
-        public async Task<IActionResult> Grades(string id)
+        public async Task<IActionResult> Grades()
         {
-            var student = await _context.Student.Where(x => x.UserId == id).FirstOrDefaultAsync();
+            var currentUserId = User.Identity.GetUserId().ToString();
+            var student = await _context.Student.Where(x => x.UserId == currentUserId).FirstOrDefaultAsync();
             var listGrades = await _context.Grade.Include(x=>x.Courses)
                                                  .Include(x=>x.Proffesor)
                                                  .Where(x => x.StudentId == student.Id)
