@@ -2,7 +2,6 @@
 using GradManSystem1.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PayPal.Api;
@@ -13,7 +12,7 @@ namespace GradManSystem1.Controllers
 {
     public class ProductsController : Controller
     {
-        private static decimal P_Subtotal = 0;
+        private static decimal Subtotal = 0;
         private static List<UserProducts> userProducts = new List<UserProducts>();
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDbContext _context;
@@ -31,7 +30,7 @@ namespace GradManSystem1.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult Index()
         {
-            ViewBag.subtotal = P_Subtotal;
+            ViewBag.subtotal = Subtotal;
             var products = _context.Products.ToList();
             return View(products);
         }
@@ -40,19 +39,27 @@ namespace GradManSystem1.Controllers
         {
             var currentUserId = User.Identity.GetUserId().ToString();
             var alreadyBought = _context.UserProducts.Any(x => x.UserId.ToString() == currentUserId && x.ProductId == id);
+            var prod = HttpContext.Session.GetString("userprod");
+            var products = _context.Products.ToList();
+            if (!string.IsNullOrEmpty(prod))
+            {
+                var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod.ToString());
+                if (deserializedObj.Select(x => x.ProductId).Contains(id))
+                {
+                    TempData["message"] = "This product is already in your Shopping Cart.";
+                    return View("Index", products);
+                }
+            }
 
             if (alreadyBought)
             {
                 TempData["message"] = "You have already paid for this course.";
-            }
-            else if (userProducts.Select(x => x.ProductId).Contains(id))
-            {
-                TempData["message"] = "This product is already in your Shopping Cart.";
+                return View("Index", products);
             }
             else
             {
-                P_Subtotal += _context.Products.Where(x => x.Id == id).Select(x => x.Price).FirstOrDefault();
-                ViewBag.subtotal = P_Subtotal;
+                Subtotal += _context.Products.Where(x => x.Id == id).Select(x => x.Price).FirstOrDefault();
+                ViewBag.subtotal = Subtotal;
                 var userProduct = new UserProducts()
                 {
                     UserId = Guid.Parse(currentUserId),
@@ -63,41 +70,26 @@ namespace GradManSystem1.Controllers
                 HttpContext.Session.SetString("userprod", JsonConvert.SerializeObject(userProducts));
             }
 
-            var products = _context.Products.ToList();
             return View("Index", products);
         }
-
-
-
 
         [Authorize(Roles = "Student")]
         public IActionResult ViewCart()
         {
             var prod = HttpContext.Session.GetString("userprod");
-
-            if (string.IsNullOrEmpty(prod))
+            if (string.IsNullOrEmpty(prod) || prod.Contains("[]"))
             {
                 ViewBag.Message = "No Courses in your Cart.";
-                return View(new List<UserProducts>()); // Return an empty list to the view
+                return View(null);
             }
 
-            var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod);
-
-            if (deserializedObj == null)
-            {
-                ViewBag.Message = "Error retrieving cart data.";
-                return View(new List<UserProducts>()); // Return an empty list to the view
-            }
-
+            var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod.ToString());
             var userProduct = _context.Products
-                .Where(x => deserializedObj.Select(p => p.ProductId).Contains(x.Id))
+                .Where(x => deserializedObj.Select(x => x.ProductId).Contains(x.Id))
                 .ToList();
 
             return View(userProduct);
         }
-
-
-
 
         [Authorize(Roles = "Student")]
         public IActionResult PaidCourses(int id)
@@ -116,12 +108,9 @@ namespace GradManSystem1.Controllers
             return View(userProduct.DistinctBy(x => x.Id).ToList());
         }
 
-
-
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int id)
         {
- 
             var prod = HttpContext.Session.GetString("userprod");
             var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod.ToString());
             var itemToRemove = deserializedObj.FirstOrDefault(x => x.ProductId == id);
@@ -130,15 +119,17 @@ namespace GradManSystem1.Controllers
                 deserializedObj.Remove(itemToRemove);
                 HttpContext.Session.SetString("userprod", JsonConvert.SerializeObject(deserializedObj));
             }
+
+            var productPrice = _context.Products.Where(x => x.Id == id).FirstOrDefault().Price;
+            //TODO get amount from db 
+            Subtotal = Subtotal - productPrice;
             return RedirectToAction("ViewCart");
         }
-
-
 
         [Authorize(Roles = "Student")]
         public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
- 
+
             var ClientID = _configuration.GetValue<string>("PayPal:Key");
             var ClientSecret = _configuration.GetValue<string>("PayPal:Secret");
             var mode = _configuration.GetValue<string>("PayPal:mode");
@@ -176,7 +167,7 @@ namespace GradManSystem1.Controllers
                     }
                     // saving the paymentID in the key guid  
                     _httpContextAccessor.HttpContext.Session.SetString("payment", createdPayment.id);
-                    
+
                     return Redirect(paypalRedirectUrl);
                 }
                 else
@@ -201,6 +192,8 @@ namespace GradManSystem1.Controllers
                     var blogIds = executedPayment.transactions[0].item_list.items[0].sku;
                     return View("PaymentSuccess");
                 }
+             
+                return RedirectToAction("ViewCart");
             }
             catch (Exception ex)
             {
@@ -235,7 +228,7 @@ namespace GradManSystem1.Controllers
             {
                 name = "Item Detail",
                 currency = "USD",
-                price = P_Subtotal.ToString("F"),
+                price = Subtotal.ToString("F"),
                 quantity = "1",
                 sku = "asd"
             });
@@ -253,7 +246,7 @@ namespace GradManSystem1.Controllers
             var amount = new Amount()
             {
                 currency = "USD",
-                total = P_Subtotal.ToString(),
+                total = Subtotal.ToString(),
             };
             var transactionList = new List<Transaction>();
             //Adding description about the transaction
