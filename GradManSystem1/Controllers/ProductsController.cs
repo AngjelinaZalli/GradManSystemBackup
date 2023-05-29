@@ -2,6 +2,7 @@
 using GradManSystem1.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PayPal.Api;
@@ -37,59 +38,107 @@ namespace GradManSystem1.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult AddToCart(int id)
         {
-            if(!userProducts.Select(x => x.Id).Contains(id))
+            var currentUserId = User.Identity.GetUserId().ToString();
+            var alreadyBought = _context.UserProducts.Any(x => x.UserId.ToString() == currentUserId && x.ProductId == id);
+
+            if (alreadyBought)
+            {
+                TempData["message"] = "You have already paid for this course.";
+            }
+            else if (userProducts.Select(x => x.ProductId).Contains(id))
+            {
+                TempData["message"] = "This product is already in your Shopping Cart.";
+            }
+            else
             {
                 P_Subtotal += _context.Products.Where(x => x.Id == id).Select(x => x.Price).FirstOrDefault();
                 ViewBag.subtotal = P_Subtotal;
-                var currentUserId = User.Identity.GetUserId().ToString();
-                var userproduct = new UserProducts()
+                var userProduct = new UserProducts()
                 {
                     UserId = Guid.Parse(currentUserId),
                     ProductId = id
                 };
-                userProducts.Add(userproduct);
+                userProducts.Add(userProduct);
                 TempData["userprod"] = JsonConvert.SerializeObject(userProducts);
-
-                _context.SaveChanges();
+                HttpContext.Session.SetString("userprod", JsonConvert.SerializeObject(userProducts));
             }
+
             var products = _context.Products.ToList();
             return View("Index", products);
         }
 
+
+
+
         [Authorize(Roles = "Student")]
         public IActionResult ViewCart()
         {
+            var prod = HttpContext.Session.GetString("userprod");
+
+            if (string.IsNullOrEmpty(prod))
+            {
+                ViewBag.Message = "No Courses in your Cart.";
+                return View(new List<UserProducts>()); // Return an empty list to the view
+            }
+
+            var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod);
+
+            if (deserializedObj == null)
+            {
+                ViewBag.Message = "Error retrieving cart data.";
+                return View(new List<UserProducts>()); // Return an empty list to the view
+            }
+
+            var userProduct = _context.Products
+                .Where(x => deserializedObj.Select(p => p.ProductId).Contains(x.Id))
+                .ToList();
+
+            return View(userProduct);
+        }
+
+
+
+
+        [Authorize(Roles = "Student")]
+        public IActionResult PaidCourses(int id)
+        {
             var userProduct = _context.UserProducts
-                                    .Include(x => x.Product)
-                                    .Where(x => x.UserId.ToString() == User.Identity.GetUserId().ToString())
-                                    .Select(x => x.Product)
-                                    .ToList();
+                .Include(x => x.Product)
+                .Where(x => x.UserId.ToString() == User.Identity.GetUserId().ToString())
+                .Select(x => x.Product)
+                .ToList();
+
+            if (userProduct.Count == 0)
+            {
+                ViewBag.Message = "No Paid Courses available.";
+            }
+
             return View(userProduct.DistinctBy(x => x.Id).ToList());
         }
+
+
+
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int id)
         {
-            var currentUserId = User.Identity.GetUserId().ToString();
-            var userProduct = _context.UserProducts
-                .FirstOrDefault(x => x.UserId.ToString() == currentUserId && x.ProductId == id);
-
-            if (userProduct != null)
+ 
+            var prod = HttpContext.Session.GetString("userprod");
+            var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod.ToString());
+            var itemToRemove = deserializedObj.FirstOrDefault(x => x.ProductId == id);
+            if (itemToRemove != null)
             {
-                _context.UserProducts.Remove(userProduct);
-                _context.SaveChanges();
+                deserializedObj.Remove(itemToRemove);
+                HttpContext.Session.SetString("userprod", JsonConvert.SerializeObject(deserializedObj));
             }
-
             return RedirectToAction("ViewCart");
         }
+
 
 
         [Authorize(Roles = "Student")]
         public ActionResult PaymentWithPaypal(string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
-            
-            //_context.AddRangeAsync(userProducts);
-            //_context.SaveChanges();
-            //getting the apiContext  
+ 
             var ClientID = _configuration.GetValue<string>("PayPal:Key");
             var ClientSecret = _configuration.GetValue<string>("PayPal:Secret");
             var mode = _configuration.GetValue<string>("PayPal:mode");

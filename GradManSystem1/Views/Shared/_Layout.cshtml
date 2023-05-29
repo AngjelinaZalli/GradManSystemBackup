@@ -30,12 +30,12 @@
     <link rel="stylesheet" href="~/GradManSystem1.styles.css" asp-append-version="true" />
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
 
 </head>
 <body>
 
-    <partial name="_CookieConsentPartial" />
+   @* <partial name="_CookieConsentPartial" />*@
 
  <header class="header">
    @*<div class="topbar clearfix">*@
@@ -115,6 +115,11 @@
                                 <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
                                     <li><a asp-action="Create" asp-controller="Courses" class="nav-item nav-link active">Cours </a></li>
                                 </ul>
+                              @*  <ul class="nav navbar-nav navbar-left" style="margin-right: 10px;">
+                                    <li><a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="DashBoard">Dashboard</a>
+                                </li>
+                                </ul>*@
+
                           
                             }
                             

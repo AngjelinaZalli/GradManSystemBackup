@@ -38,6 +38,8 @@ AddAuthorizationPolicies();
 
 builder.Services.AddDistributedMemoryCache();
 
+
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(2);
@@ -45,8 +47,6 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 }
 );
-
-
 
 
 var services = builder.Services;
@@ -62,7 +62,7 @@ services.AddAuthentication().AddMicrosoftAccount(options =>
     options.ClientSecret = configuration["MicrosoftSecretId"]!;
 });
 
-
+services.AddControllersWithViews().AddSessionStateTempDataProvider();
 
 //builder.Services.AddAuthorization(options =>
 //{

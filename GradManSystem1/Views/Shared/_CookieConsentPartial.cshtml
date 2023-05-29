@@ -3,7 +3,8 @@
 @{
     var consentFeatureFlag = Context.Features.Get<ITrackingConsentFeature>();
     var showBannerFlag = !consentFeatureFlag?.CanTrack ?? false;
-    var cookieStr = consentFeatureFlag?.CreateConsentCookie();
+    var cookieName = "gradmansystem"; // Emri i cookie
+    var cookieStr = $"{cookieName}={consentFeatureFlag?.CreateConsentCookie()}";
 
     // Vendosni kohën e skadimit në minutat e dëshiruara
     var expirationSeconds = 120; // Për shembull, 2 minuta
@@ -22,7 +23,6 @@
             <span aria-hidden="true">Accept</span>
         </button>
     </div>
-
     <script type="text/javascript">
         $(document).ready(function () {
             $("#cookieConsentdiv button[data-cookie-string]").bind("click", function () {
@@ -31,7 +31,12 @@
             });
         });
     </script>
-}
+
+    }
+
+
+
+
 
 <style>
 
@@ -51,7 +56,7 @@
     }
 
         #cookieConsentdiv button {
-            display: block;
+            
             margin-left: auto;
             margin-right: auto;
             border: none;
