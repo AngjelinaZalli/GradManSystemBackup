@@ -40,6 +40,7 @@ namespace GradManSystem1.Controllers
         }
 
         [Authorize(Policy = "Admin")]
+        //Retrieves a list of users
         public async Task<IActionResult> Users(string searchString)
         {
             var users = from c in _context.Users select c;

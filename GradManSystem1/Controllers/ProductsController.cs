@@ -109,7 +109,7 @@ namespace GradManSystem1.Controllers
         }
 
         [Authorize(Roles = "Student")]
-        public IActionResult Delete(int id)
+        public IActionResult RemoveFromViewCart(int id)
         {
             var prod = HttpContext.Session.GetString("userprod");
             var deserializedObj = JsonConvert.DeserializeObject<List<UserProducts>>(prod.ToString());

@@ -25,7 +25,7 @@ else
                 <td>@item.Description</td>
                 <td>$@item.Price</td>
                  <td class="align-middle">
-                    <form method="post" asp-controller="Products" asp-action="Delete" onsubmit="return confirmDelete();">
+                        <form method="post" asp-controller="Products" asp-action="RemoveFromViewCart" onsubmit="return confirmDelete();">
                         <input type="hidden" name="id" value="@item.Id" />
                         <button type="submit" class="btn btn-sm btn-danger" formnovalidate>
                             Remove
